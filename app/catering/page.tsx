@@ -1,2 +1,15 @@
 import PublicForm from "@/components/PublicForm";
-export default function Catering(){return <main className="container" style={{maxWidth:650,padding:"45px 0"}}><a href="/">← Home</a><h1 style={{fontSize:38}}>Catering Enquiry</h1><p className="muted">Tell us about your event and our catering team will get in touch.</p><PublicForm endpoint="/api/catering" kind="catering"/></main>}
+import Link from "next/link";
+import { ArrowLeft, PartyPopper } from "lucide-react";
+import StoreHeader from "@/components/StoreHeader";
+
+export default function Catering() {
+	return <>
+		<StoreHeader />
+		<main className="container public-page form-page">
+			<Link href="/" className="back-link"><ArrowLeft size={16} aria-hidden="true" />Home</Link>
+			<div className="public-page-heading"><span className="eyebrow"><PartyPopper size={14} aria-hidden="true" /> GATHER AROUND THE TABLE</span><h1>Catering Enquiry</h1><p className="muted">Tell us about your event and our catering team will get in touch.</p></div>
+			<PublicForm endpoint="/api/catering" kind="catering" />
+		</main>
+	</>;
+}

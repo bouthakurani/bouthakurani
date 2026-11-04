@@ -9,13 +9,15 @@ A Next.js + Node.js + PostgreSQL starter application for Bouthakurani.
 - Customer review submission with moderation default (not publicly displayed until approved)
 - Admin login with hashed password and HTTP-only signed session cookie
 - Admin dashboard with live database counts and completed revenue
-- Menu category seeding and menu item creation
+- Admin menu categories and items with add, edit, hide/show, image, availability and safe delete controls
+- Public menu search, category filters, verified food images and responsive mobile browse/cart navigation
+- Persistent cart, scheduled delivery address/time, and server-verified Razorpay checkout
 - Admin order, reservation, catering, customer and review lists
-- Public order creation API with database-backed menu price lookup
+- Admin order list with delivery schedule and payment status
 - Responsive light-theme admin layout
 
-## Not yet a complete production POS/ERP
-This ZIP is a runnable foundation, not a claim that every feature in the original specification is fully implemented. Advanced POS, kitchen/bar display, stock/recipe accounting, full billing/GST workflows, customer segmentation, staff permissions, WhatsApp/SMS delivery, Razorpay checkout, printer support, and moderation actions require further implementation and provider credentials. Do not accept live payments or rely on it for regulated alcohol sales until those workflows are completed and tested.
+## Production setup notes
+Advanced POS, kitchen/bar display, stock/recipe accounting, full billing/GST workflows, customer segmentation, staff permissions, WhatsApp/SMS delivery, printer support, and moderation actions require further implementation. Razorpay checkout is implemented but requires provider keys and an active payment account. Do not rely on this starter for regulated alcohol sales.
 
 ## 1. Requirements
 - Node.js 20.9+ (Node 22 recommended)
@@ -42,9 +44,14 @@ npm run dev
 
 Open http://localhost:3000 and sign in at `/admin/login`.
 
-Default seed email: `admin@bouthakurani.in`. The password is whatever you set as `ADMIN_PASSWORD`. The example password is `Admin@2026`; change it before production.
+Default seed email: `admin@bouthakurani.in`. The password is whatever you set as `ADMIN_PASSWORD`. Set a unique password in `.env`; no default password is shipped.
 
-## 3. Deploy to Vercel
+## 3. Online ordering
+The seed adds the 24 requested banquet selections with images and a price of `0` because no prices were supplied. Set actual prices and review images in Admin → Menu before accepting orders; unpriced, hidden, or unavailable items cannot be checked out.
+
+Set `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` in `.env` for local payments and in the deployment environment for production. The server verifies payment signatures before confirming orders. Delivery can be scheduled at least one hour ahead and up to 30 days out. Delivery charges are not configured, so online payment currently covers the item subtotal only.
+
+## 4. Deploy to Vercel
 1. Push this project to a private GitHub repository.
 2. In Vercel, choose Add New → Project and import the repository.
 3. Add all required environment variables from `.env.example` in Vercel Project Settings → Environment Variables.
@@ -61,7 +68,7 @@ npm run db:seed
 
 For a controlled production migration workflow, create and commit Prisma migrations rather than using `db push` for every future schema change.
 
-## 4. Security
+## 5. Security
 - Never commit `.env`.
 - Rotate the example password before deployment.
 - Use a unique production JWT secret.
@@ -70,5 +77,5 @@ For a controlled production migration workflow, create and commit Prisma migrati
 - Add rate limiting/WAF protection before public promotion.
 - Add a password-change workflow before using this as a production admin system.
 
-## 5. Important
+## 6. Important
 WhatsApp Cloud API, SMS, Razorpay and Cloudinary credentials are not included. Provider onboarding, template approval, webhook configuration, DLT registration and payment account activation are external requirements. Never publish secret keys in browser code.
