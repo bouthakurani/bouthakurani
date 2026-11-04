@@ -1,0 +1,6 @@
+import {PrismaClient} from "@prisma/client";import bcrypt from "bcryptjs";
+const prisma=new PrismaClient();
+async function main(){const email=(process.env.ADMIN_EMAIL||"admin@bouthakurani.in").toLowerCase();const password=process.env.ADMIN_PASSWORD;if(!password)throw new Error("Set ADMIN_PASSWORD before running the seed script.");const passwordHash=await bcrypt.hash(password,12);await prisma.user.upsert({where:{email},update:{},create:{email,passwordHash,name:"Bouthakurani Administrator",role:"SUPER_ADMIN",mustChangePassword:true}});
+const names=["Starters","Vegetarian","Non-Vegetarian","Fish & Seafood","Chicken","Mutton","Rice & Biryani","Indian Main Course","Chinese","Continental","Desserts","Beverages","Mocktails","Bar Menu","Chef Specials"];for(let i=0;i<names.length;i++)await prisma.menuCategory.upsert({where:{name:names[i]},update:{},create:{name:names[i],sortOrder:i}});
+console.log("Admin and default menu categories seeded.");}
+main().catch(e=>{console.error(e);process.exit(1)}).finally(()=>prisma.$disconnect());

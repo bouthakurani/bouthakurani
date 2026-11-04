@@ -1,0 +1,4 @@
+import { prisma } from "@/lib/prisma";
+export const dynamic="force-dynamic";
+export default async function MenuPage(){const cats=await prisma.menuCategory.findMany({where:{active:true},include:{items:{where:{available:true},orderBy:{name:"asc"}}},orderBy:{sortOrder:"asc"}}).catch(()=>[]);
+return <main className="container" style={{padding:"38px 0"}}><a href="/">← Home</a><h1 style={{fontSize:40}}>Our Menu</h1><p className="muted">Freshly prepared favourites from Bouthakurani.</p>{cats.length===0?<div className="card">Our menu is being updated. Please check back soon.</div>:cats.map(c=><section key={c.id} style={{marginTop:32}}><h2 style={{fontSize:25}}>{c.name}</h2><div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))",gap:14}}>{c.items.map(i=><article className="card" key={i.id}><h3>{i.name}</h3><p className="muted">{i.description}</p><b>₹{Number(i.price).toFixed(2)}</b></article>)}</div></section>)}</main>}

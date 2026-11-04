@@ -1,0 +1,2 @@
+import {redirect} from "next/navigation";import {getSessionUser} from "@/lib/auth";import AdminShell from "@/components/AdminShell";
+export default async function Layout({children}:{children:React.ReactNode}){const user=await getSessionUser();if(!user)redirect("/admin/login");return <AdminShell email={user.email}>{children}</AdminShell>}

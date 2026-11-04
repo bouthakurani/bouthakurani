@@ -1,0 +1,191 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrderStatus {
+  NEW
+  CONFIRMED
+  PREPARING
+  READY
+  OUT_FOR_DELIVERY
+  COMPLETED
+  CANCELLED
+}
+
+enum OrderType {
+  DINE_IN
+  TAKEAWAY
+  DELIVERY
+  PREORDER
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  SEATED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum RecordStatus {
+  NEW
+  CONTACTED
+  QUOTED
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id                 String   @id @default(cuid())
+  email              String   @unique
+  name               String   @default("Administrator")
+  passwordHash       String
+  role               String   @default("SUPER_ADMIN")
+  mustChangePassword Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model MenuCategory {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  sortOrder Int        @default(0)
+  active    Boolean    @default(true)
+  items     MenuItem[]
+  createdAt DateTime   @default(now())
+}
+
+model MenuItem {
+  id          String       @id @default(cuid())
+  name        String
+  description String?
+  price       Decimal      @db.Decimal(10, 2)
+  imageUrl    String?
+  isVeg       Boolean      @default(false)
+  available   Boolean      @default(true)
+  featured    Boolean      @default(false)
+  categoryId  String
+  category    MenuCategory @relation(fields: [categoryId], references: [id])
+  orderItems  OrderItem[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([categoryId, available])
+}
+
+model Customer {
+  id           String        @id @default(cuid())
+  name         String
+  phone        String        @unique
+  email        String?
+  address      String?
+  notes        String?
+  orders       Order[]
+  reservations Reservation[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  orderNumber     String      @unique
+  type            OrderType   @default(TAKEAWAY)
+  status          OrderStatus @default(NEW)
+  customerId      String?
+  customer        Customer?   @relation(fields: [customerId], references: [id])
+  customerName    String
+  customerPhone   String
+  subtotal        Decimal     @db.Decimal(10, 2)
+  tax             Decimal     @default(0) @db.Decimal(10, 2)
+  deliveryFee     Decimal     @default(0) @db.Decimal(10, 2)
+  total           Decimal     @db.Decimal(10, 2)
+  paymentMethod   String      @default("CASH")
+  paymentStatus   String      @default("PENDING")
+  notes           String?
+  items           OrderItem[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([status, createdAt])
+}
+
+model OrderItem {
+  id         String    @id @default(cuid())
+  orderId    String
+  order      Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItemId String?
+  menuItem   MenuItem? @relation(fields: [menuItemId], references: [id])
+  itemName   String
+  quantity   Int
+  unitPrice  Decimal   @db.Decimal(10, 2)
+  lineTotal  Decimal   @db.Decimal(10, 2)
+}
+
+model Reservation {
+  id         String            @id @default(cuid())
+  customerId String?
+  customer   Customer?         @relation(fields: [customerId], references: [id])
+  name       String
+  phone      String
+  email      String?
+  guests     Int
+  bookingAt  DateTime
+  notes      String?
+  status     ReservationStatus @default(PENDING)
+  createdAt  DateTime          @default(now())
+
+  @@index([bookingAt, status])
+}
+
+model CateringEnquiry {
+  id        String       @id @default(cuid())
+  name      String
+  phone     String
+  email     String?
+  eventType String
+  eventDate DateTime?
+  location  String?
+  guests    Int
+  budget    Decimal?     @db.Decimal(10, 2)
+  notes     String?
+  status    RecordStatus @default(NEW)
+  createdAt DateTime     @default(now())
+}
+
+model Review {
+  id           String   @id @default(cuid())
+  customerName String
+  phone        String?
+  rating       Int
+  category     String   @default("Overall")
+  message      String
+  approved     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+}
+
+model IntegrationSetting {
+  id        String   @id @default(cuid())
+  provider  String   @unique
+  enabled   Boolean  @default(false)
+  config    Json?
+  updatedAt DateTime @updatedAt
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  entity    String
+  entityId  String?
+  details   Json?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}

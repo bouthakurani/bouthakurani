@@ -1,0 +1,2 @@
+import PublicForm from "@/components/PublicForm";
+export default function Reserve(){return <main className="container" style={{maxWidth:650,padding:"45px 0"}}><a href="/">← Home</a><h1 style={{fontSize:38}}>Reserve a Table</h1><p className="muted">Send your reservation request. Our team will confirm availability.</p><PublicForm endpoint="/api/reservations" kind="reservation"/></main>}

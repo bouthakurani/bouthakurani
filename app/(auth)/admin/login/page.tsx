@@ -1,0 +1,2 @@
+import LoginForm from "@/components/LoginForm";
+export default function LoginPage(){return <main style={{minHeight:"100vh",display:"grid",placeItems:"center",padding:20,background:"linear-gradient(135deg,#f7f2e8,#fff)"}}><div className="card" style={{width:"min(430px,100%)",padding:32}}><div style={{textAlign:"center",marginBottom:28}}><div style={{fontSize:13,letterSpacing:3,color:"#b18a4a",fontWeight:700}}>BOUTHAKURANI</div><h1 style={{fontSize:29,marginBottom:5}}>Welcome back</h1><p className="muted">Sign in to your restaurant dashboard</p></div><LoginForm/></div></main>}

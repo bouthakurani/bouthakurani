@@ -1,0 +1,3 @@
+import ReviewForm from "@/components/ReviewForm";import {prisma} from "@/lib/prisma";
+export const dynamic="force-dynamic";
+export default async function Reviews(){const reviews=await prisma.review.findMany({where:{approved:true},orderBy:{createdAt:"desc"},take:30}).catch(()=>[]);return <main className="container" style={{padding:"40px 0",maxWidth:850}}><a href="/">← Home</a><h1 style={{fontSize:38}}>Guest Reviews & Feedback</h1><p className="muted">We value your experience. Share your feedback with us.</p><ReviewForm/><div style={{display:"grid",gap:12,marginTop:28}}>{reviews.map(r=><article className="card" key={r.id}><b>{r.customerName}</b><div style={{color:"#b18a4a"}}>{"★".repeat(r.rating)}{"☆".repeat(5-r.rating)}</div><p>{r.message}</p></article>)}</div></main>}

@@ -1,0 +1,2 @@
+import {prisma} from "@/lib/prisma";import MenuAdmin from "@/components/MenuAdmin";export const dynamic="force-dynamic";
+export default async function MenuAdminPage(){const [items,cats]=await Promise.all([prisma.menuItem.findMany({include:{category:true},orderBy:{createdAt:"desc"}}),prisma.menuCategory.findMany({orderBy:{sortOrder:"asc"}})]);return <><h1 style={{fontSize:30}}>Menu Management</h1><p className="muted">Create menu categories and manage items in the database.</p><MenuAdmin items={items.map(i=>({...i,price:Number(i.price)}))} categories={cats}/></>}

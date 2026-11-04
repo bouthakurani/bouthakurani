@@ -1,0 +1,2 @@
+import PublicForm from "@/components/PublicForm";
+export default function Catering(){return <main className="container" style={{maxWidth:650,padding:"45px 0"}}><a href="/">← Home</a><h1 style={{fontSize:38}}>Catering Enquiry</h1><p className="muted">Tell us about your event and our catering team will get in touch.</p><PublicForm endpoint="/api/catering" kind="catering"/></main>}
