@@ -51,6 +51,10 @@ The seed adds the 24 requested banquet selections with images and a price of `0`
 
 Set `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` in `.env` for local payments and in the deployment environment for production. The server verifies payment signatures before confirming orders. Delivery can be scheduled at least one hour ahead and up to 30 days out. Delivery charges are not configured, so online payment currently covers the item subtotal only.
 
+Customers register and sign in with a mobile number and password; this session is separate from CRM admin login. Reservations and event enquiries remain available without signing in. Table bookings offer hourly 12:00–21:00 slots with a local capacity limit of eight reservations per slot. Event bookings offer 10:00, 14:00, and 18:00 starts in four-hour blocks, one event per block. Food add-ons require an active menu item with a configured price. Event extras include DJ and live music. Existing CRM customer phone numbers must be linked by staff before self-registration.
+
+Customers can track order status while signed in. Status is advanced by CRM staff and refreshes every 15 seconds; live courier GPS requires a separate courier location integration and is not included.
+
 ## 4. Deploy to Vercel
 1. Push this project to a private GitHub repository.
 2. In Vercel, choose Add New → Project and import the repository.
@@ -70,7 +74,7 @@ For a controlled production migration workflow, create and commit Prisma migrati
 
 ## 5. Security
 - Never commit `.env`.
-- Rotate the example password before deployment.
+- Use unique production admin and customer passwords.
 - Use a unique production JWT secret.
 - Keep provider credentials in Vercel environment variables.
 - Restrict admin access and configure backups.

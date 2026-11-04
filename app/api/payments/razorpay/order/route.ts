@@ -1,12 +1,16 @@
 import { Buffer } from "node:buffer";
 import { randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
+import { getCustomerSession } from "@/lib/customer-auth";
 import { prisma } from "@/lib/prisma";
 
 const minimumScheduleDelay = 60 * 60 * 1000;
 const maximumScheduleDelay = 30 * 24 * 60 * 60 * 1000;
 
 export async function POST(request: Request) {
+	const customerSession = await getCustomerSession();
+	if (!customerSession) return NextResponse.json({ error: "Sign in to your customer account before placing an order." }, { status: 401 });
+
 	const keyId = process.env.RAZORPAY_KEY_ID;
 	const keySecret = process.env.RAZORPAY_KEY_SECRET;
 	if (!keyId || !keySecret) {
@@ -15,9 +19,9 @@ export async function POST(request: Request) {
 
 	try {
 		const body = await request.json();
-		const customerName = typeof body.customerName === "string" ? body.customerName.trim() : "";
-		const customerPhone = typeof body.customerPhone === "string" ? body.customerPhone.trim() : "";
-		const customerEmail = typeof body.customerEmail === "string" ? body.customerEmail.trim() : "";
+		const customerName = customerSession.name;
+		const customerPhone = customerSession.phone;
+		const customerEmail = customerSession.email ?? "";
 		const deliveryAddress = typeof body.deliveryAddress === "string" ? body.deliveryAddress.trim() : "";
 		const notes = typeof body.notes === "string" ? body.notes.trim().slice(0, 500) : "";
 		const phoneDigits = customerPhone.replace(/\D/g, "");
@@ -70,11 +74,7 @@ export async function POST(request: Request) {
 		const subtotalPaise = orderLines.reduce((sum, line) => sum + line.lineTotalPaise, 0);
 		if (subtotalPaise < 100) return NextResponse.json({ error: "The order total is below the minimum online payment amount." }, { status: 400 });
 
-		const customer = await prisma.customer.upsert({
-			where: { phone: customerPhone },
-			update: { name: customerName, email: customerEmail || null, address: deliveryAddress },
-			create: { name: customerName, phone: customerPhone, email: customerEmail || null, address: deliveryAddress },
-		});
+		const customer = await prisma.customer.update({ where: { id: customerSession.id }, data: { address: deliveryAddress } });
 		const orderNumber = `BTK-${Date.now()}-${randomBytes(3).toString("hex").toUpperCase()}`;
 		const paymentResponse = await fetch("https://api.razorpay.com/v1/orders", {
 			method: "POST",

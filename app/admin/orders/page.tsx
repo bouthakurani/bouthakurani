@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import AdminOrderStatus from "@/components/AdminOrderStatus";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +17,7 @@ export default async function Orders() {
 				<td>{order.deliveryAddress || "-"}</td>
 				<td>{order.scheduledAt?.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }) || "Not scheduled"}</td>
 				<td>{order.paymentMethod} · {order.paymentStatus}</td>
-				<td>{order.status}</td>
+				<td><AdminOrderStatus orderId={order.id} status={order.status} /></td>
 				<td>₹{Number(order.total).toFixed(2)}</td>
 				<td>{order.createdAt.toLocaleString("en-IN")}</td>
 			</tr>)}{!orders.length && <tr><td colSpan={9}>No orders found.</td></tr>}</tbody>

@@ -50,7 +50,9 @@ function loadRazorpay() {
 	});
 }
 
-export default function CheckoutForm() {
+type CheckoutCustomer = { name: string; phone: string; email: string | null; address: string | null };
+
+export default function CheckoutForm({ customer }: { customer: CheckoutCustomer }) {
 	const router = useRouter();
 	const { items, subtotal, clearCart } = useCart();
 	const [scheduledAt, setScheduledAt] = useState("");
@@ -83,7 +85,7 @@ export default function CheckoutForm() {
 					customerPhone: form.get("customerPhone"),
 					customerEmail: form.get("customerEmail"),
 					deliveryAddress: form.get("deliveryAddress"),
-					scheduledAt,
+					scheduledAt: new Date(scheduledAt).toISOString(),
 					notes: form.get("notes"),
 					items: items.map(({ menuItemId, quantity }) => ({ menuItemId, quantity })),
 				}),
@@ -157,10 +159,11 @@ export default function CheckoutForm() {
 		<div className="public-page-heading"><span className="eyebrow"><CreditCard size={14} aria-hidden="true" /> SECURE CHECKOUT</span><h1>Delivery details</h1><p className="muted">Choose where and when your order should arrive.</p></div>
 		{items.length === 0 ? <section className="card checkout-empty"><p className="muted">Your cart is empty.</p><Link href="/menu" className="btn gold form-submit">Explore the menu</Link></section> : <div className="checkout-layout">
 			<form className="card checkout-form" onSubmit={submit}>
-				<label>Name<input className="field" name="customerName" autoComplete="name" maxLength={100} required /></label>
-				<label>Mobile number<input className="field" name="customerPhone" type="tel" autoComplete="tel" maxLength={24} required /></label>
-				<label>Email (optional)<input className="field" name="customerEmail" type="email" autoComplete="email" maxLength={254} /></label>
-				<label>Delivery address<textarea className="field" name="deliveryAddress" autoComplete="street-address" rows={3} maxLength={500} required /></label>
+				<p className="checkout-account-note">Signed in as <strong>{customer.name}</strong> · <Link href="/account">Manage account</Link></p>
+				<label>Name<input className="field" name="customerName" autoComplete="name" value={customer.name} readOnly /></label>
+				<label>Mobile number<input className="field" name="customerPhone" type="tel" autoComplete="tel" value={customer.phone} readOnly /></label>
+				{customer.email && <label>Email<input className="field" name="customerEmail" type="email" autoComplete="email" value={customer.email} readOnly /></label>}
+				<label>Delivery address<textarea className="field" name="deliveryAddress" autoComplete="street-address" rows={3} maxLength={500} defaultValue={customer.address ?? ""} required /></label>
 				<label>Delivery date and time<input className="field" name="scheduledAt" type="datetime-local" min={minimumScheduledAt} value={scheduledAt} onChange={(event) => setScheduledAt(event.target.value)} required /></label>
 				<label>Delivery notes (optional)<textarea className="field" name="notes" rows={2} maxLength={500} placeholder="Gate, floor or delivery instructions" /></label>
 				{message && <p className="checkout-message" role="alert">{message}</p>}

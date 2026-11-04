@@ -17,6 +17,7 @@ import {
   Search,
   ShoppingBag,
   Utensils,
+  UserRound,
   X,
 } from "lucide-react";
 import { useCart } from "@/components/CartProvider";
@@ -36,10 +37,17 @@ export default function StoreHeader({ showSearch = false, searchQuery = "" }: { 
   const [locationDraft, setLocationDraft] = useState("");
   const [locationOpen, setLocationOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [customerName, setCustomerName] = useState("");
   const pathname = usePathname();
 
   useEffect(() => {
     setLocation(window.localStorage.getItem(locationStorageKey) ?? "");
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/customer/auth/session").then((response) => response.json()).then((result) => {
+      setCustomerName(typeof result.customer?.name === "string" ? result.customer.name : "");
+    }).catch(() => setCustomerName(""));
   }, []);
 
   useEffect(() => {
@@ -100,7 +108,7 @@ export default function StoreHeader({ showSearch = false, searchQuery = "" }: { 
         </nav>
 
         <div className="header-actions">
-          <Link href="/admin/login" className="signin-link">Sign in</Link>
+          <Link href={customerName ? "/account" : "/account/login"} className="signin-link">{customerName || "Sign in"}</Link>
           <Link href="/cart" className="cart-link" aria-label={`Shopping bag, ${itemCount} items`}>
             <ShoppingBag size={18} aria-hidden="true" /><span>Bag</span><span className="cart-count">{itemCount}</span>
           </Link>
@@ -124,8 +132,8 @@ export default function StoreHeader({ showSearch = false, searchQuery = "" }: { 
               <Icon size={18} aria-hidden="true" />{label}<ArrowUpRight className="mobile-nav-arrow" size={16} aria-hidden="true" />
             </Link>
           ))}
-          <Link href="/admin/login" onClick={() => setMobileMenuOpen(false)}>
-            <ShoppingBag size={18} aria-hidden="true" />Sign in<ArrowUpRight className="mobile-nav-arrow" size={16} aria-hidden="true" />
+          <Link href={customerName ? "/account" : "/account/login"} onClick={() => setMobileMenuOpen(false)}>
+							<UserRound size={18} aria-hidden="true" />{customerName || "Sign in"}<ArrowUpRight className="mobile-nav-arrow" size={16} aria-hidden="true" />
           </Link>
         </nav>
       )}

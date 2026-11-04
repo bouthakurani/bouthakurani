@@ -1639,6 +1639,17 @@ textarea.field {
   font-weight: 600;
 }
 
+.checkout-account-note {
+  margin: 0;
+  color: #77736c;
+  font-size: 12px;
+}
+
+.checkout-account-note a {
+  color: #d84e1d;
+  font-weight: 700;
+}
+
 .checkout-form .field {
   min-height: 46px;
 }
@@ -1829,5 +1840,331 @@ textarea.field {
     grid-column: 3;
     grid-row: 2;
     justify-self: end;
+  }
+}
+
+.customer-auth-page {
+  width: min(460px, calc(100% - 32px));
+}
+
+.customer-auth-form {
+  display: grid;
+  gap: 14px;
+  padding: 22px;
+}
+
+.customer-auth-form > label {
+  display: grid;
+  gap: 7px;
+  color: #403b36;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.customer-auth-message {
+  margin: 0;
+  color: #9c3d31;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.customer-auth-switch,
+.customer-auth-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin: 0;
+  color: #77736c;
+  font-size: 12px;
+  text-align: center;
+}
+
+.customer-auth-switch a {
+  color: #d84e1d;
+  font-weight: 700;
+}
+
+.customer-auth-note svg {
+  flex: 0 0 auto;
+}
+
+.customer-account-details {
+  display: grid;
+  gap: 14px;
+}
+
+.customer-account-details > div {
+  display: grid;
+  gap: 4px;
+}
+
+.customer-account-details span {
+  color: #77736c;
+  font-size: 12px;
+}
+
+.customer-account-details strong {
+  overflow-wrap: anywhere;
+  font-size: 14px;
+}
+
+.customer-account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.customer-account-reserve {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #6d625a;
+  font-size: 12px;
+}
+
+.booking-addon-group {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid #eee7df;
+  border-radius: 7px;
+}
+
+.booking-addon-group legend {
+  padding: 0 5px;
+  color: #403b36;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.booking-addon-option {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 4px;
+  color: #49433d;
+  font-size: 13px;
+}
+
+.booking-addon-option > input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--orange);
+}
+
+.booking-addon-option > span {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+  overflow-wrap: anywhere;
+}
+
+.booking-addon-option small {
+  color: #82786f;
+  font-size: 11px;
+}
+
+.booking-addon-option strong {
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.booking-addon-empty,
+.public-form-error,
+.booking-addon-help {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.booking-addon-help { color: #77736c; }
+
+.public-form-error {
+  color: #9c3d31;
+}
+
+.order-tracker-card {
+  display: grid;
+  gap: 22px;
+  padding: 20px;
+}
+
+.order-tracker-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #eee7df;
+}
+
+.order-tracker-header > div {
+  display: grid;
+  gap: 5px;
+}
+
+.order-tracker-header span {
+  font-size: 12px;
+}
+
+.order-tracker-header strong {
+  font-size: 16px;
+}
+
+.order-progress-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.order-progress-list li {
+  position: relative;
+  min-height: 48px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: #8a837d;
+  font-size: 13px;
+}
+
+.order-progress-list li:not(:last-child)::after {
+  position: absolute;
+  top: 31px;
+  bottom: -1px;
+  left: 15px;
+  width: 2px;
+  background: #e8e1d8;
+  content: "";
+}
+
+.order-progress-list li.complete,
+.order-progress-list li.current {
+  color: #3e3832;
+  font-weight: 700;
+}
+
+.order-progress-icon {
+  position: relative;
+  z-index: 1;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #ded6cd;
+  border-radius: 50%;
+  background: #fff;
+  color: #82786f;
+}
+
+.order-progress-list .complete .order-progress-icon,
+.order-progress-list .current .order-progress-icon {
+  border-color: #efb098;
+  background: #fff0e7;
+  color: #df531f;
+}
+
+.order-tracker-note {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: #f8f4ed;
+  color: #6d625a;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.order-tracker-items {
+  display: grid;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid #eee7df;
+}
+
+.order-tracker-items h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.order-tracker-items > div {
+  color: #5f5953;
+  font-size: 13px;
+}
+
+.customer-order-list {
+  display: grid;
+  gap: 9px;
+}
+
+.customer-order-card {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid #eee7df;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.customer-order-card > span {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.customer-order-card strong {
+  overflow-wrap: anywhere;
+  font-size: 13px;
+}
+
+.customer-order-card small {
+  color: #77736c;
+  font-size: 11px;
+}
+
+.admin-order-status-control {
+  min-width: 136px;
+  display: grid;
+  gap: 3px;
+}
+
+.admin-order-status-control .field {
+  min-height: 36px;
+  padding: 7px;
+  font-size: 11px;
+}
+
+.admin-order-status-control small {
+  max-width: 200px;
+  color: #9c3d31;
+  font-size: 10px;
+}
+
+@media (max-width: 767px) {
+  .order-tracker-card {
+    padding: 15px;
+  }
+
+  .customer-order-card {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px 12px;
+  }
+
+  .customer-order-card > span:nth-child(2) {
+    grid-column: 1;
+  }
+
+  .customer-order-card > strong {
+    grid-column: 2;
+    grid-row: 1 / span 2;
   }
 }

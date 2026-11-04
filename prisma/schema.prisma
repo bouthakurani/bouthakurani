@@ -85,6 +85,7 @@ model Customer {
   name         String
   phone        String        @unique
   email        String?
+  passwordHash String?
   address      String?
   notes        String?
   orders       Order[]
@@ -142,6 +143,7 @@ model Reservation {
   email      String?
   guests     Int
   bookingAt  DateTime
+  addOns     Json?
   notes      String?
   status     ReservationStatus @default(PENDING)
   createdAt  DateTime          @default(now())
@@ -159,6 +161,7 @@ model CateringEnquiry {
   location  String?
   guests    Int
   budget    Decimal?     @db.Decimal(10, 2)
+  addOns    Json?
   notes     String?
   status    RecordStatus @default(NEW)
   createdAt DateTime     @default(now())
